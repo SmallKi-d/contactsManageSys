@@ -24,7 +24,7 @@
 4. 版本号显示 (Version) ✅
 5. 简单的跨平台兼容性（Windows & macOS）✅
 6. Github Actions 自动化编译 ✅
-7. GTest 单元测试 
+7. GTest 单元测试 ✅
 
 ### 食用方法
 
