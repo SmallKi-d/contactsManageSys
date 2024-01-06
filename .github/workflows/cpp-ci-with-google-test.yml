@@ -42,7 +42,7 @@ jobs:
 
     - name: ls
       run: |
-        cd test
+        cd build
         ls -a
 
     - name: Test
