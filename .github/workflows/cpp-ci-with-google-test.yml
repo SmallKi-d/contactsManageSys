@@ -45,29 +45,18 @@ jobs:
     - name: Google Test
       run: ./build/test/google_test
 
-    - name: Extract tag name
-      id: get_tag
-      run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
-      shell: bash
+    - name: Zip the Build
+      run: zip -r contactsManageSys-amd64 ./build/contactsManageSys
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Release and Upload Release Asset
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        tag_name: ${{ steps.get_tag.outputs.tag }}
-        release_name: Release ${{ steps.get_tag.outputs.tag }}
+        tag_name: ${{ github.ref }}
+        name: Release ${{ github.ref }}
+        body: Auto Release
         draft: false
         prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/contactsManageSys
-        asset_name: contactsManageSys-amd64
-        asset_content_type: application/octet-stream
-
+        files: |
+          contactsManageSys-amd64.zip
+          LICENSE
