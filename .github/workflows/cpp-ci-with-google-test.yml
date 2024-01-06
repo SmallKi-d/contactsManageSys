@@ -42,8 +42,13 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Test
+    - name: Google Test
       run: ./build/test/google_test
+
+    - name: Extract tag name
+      id: get_tag
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+      shell: bash
 
     - name: Create Release
       id: create_release
@@ -51,8 +56,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ steps.get_tag.outputs.tag }}
+        release_name: Release ${{ steps.get_tag.outputs.tag }}
         draft: false
         prerelease: false
 
