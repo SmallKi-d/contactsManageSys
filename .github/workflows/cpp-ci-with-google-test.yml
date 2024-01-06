@@ -29,7 +29,7 @@ jobs:
         cd /usr/src/gtest
         sudo cmake CMakeLists.txt
         sudo make
-        sudo cp *.a /usr/lib
+        sudo cp lib/*.a /usr/lib
         sudo apt install g++-9
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 90
 
