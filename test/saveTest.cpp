@@ -6,6 +6,7 @@
 #include <fstream>
 #include <filesystem>
 #include "../header/save.h"
+#include "../header/contact.h"
 
 class SaveTest : public ::testing::Test {
 protected:
@@ -52,12 +53,16 @@ protected:
 
 // 测试 SaveToFile 函数
 TEST_F(SaveTest, SaveToFile) {
+    ofstream outFile(tempFilename);
+
     // 准备一些数据
-    contacts contact = {"Alice", 1, 30, "1234567890", "Alice Address"};
-    addressList.l_Arr[addressList.l_size++] = contact;
+    ContactLogic(&addressList, addressList.l_size, "Alice", 1, 30, "1234567890", "Alice Address");
+
+    // 创建对象并拷贝数据
+    Save* s2f = new Save(addressList);
 
     // 保存到文件
-    saveObj->SaveToFile(tempFilename);
+    s2f->SaveToFile(tempFilename);
 
     // 验证文件内容
     contacts fileContent = readFileContent();
