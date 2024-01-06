@@ -15,4 +15,8 @@ add_executable(contactsManageSys main.cpp
         header/do.h
         source/do.cpp
         header/structure.h
+        header/clear.h
+        source/clear.cpp
 )
+
+add_subdirectory(test)

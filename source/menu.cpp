@@ -3,9 +3,10 @@
 //
 #include <iostream>
 #include "../header/contact.h"
+#include "../header/do.h"
 
 void showMenu(list addressList){
-    int select = 0;//创建用户输入变量
+    string select;//创建用户输入变量
 
     while (true){
         //清空终端
@@ -23,10 +24,13 @@ void showMenu(list addressList){
         cout << "\t******************************" << endl;
         cin  >> select;
 
+        string A = whatDo(addressList, select);
+
+
         //菜单选择
-        switch (select) {
+        switch (stoi(A)) {
             case 1:         //1.add
-                addContacts(&addressList);
+                addContact(&addressList);
                 break;
             case 2:         //2.show
                 showContacts(&addressList);
@@ -43,7 +47,10 @@ void showMenu(list addressList){
             case 6:         //6.clear
                 cleanList(&addressList);
                 break;
+            case 9:
+                showMenu(addressList);
             case 0:         //7.exit
+                writeContact(&addressList);
                 cout << "欢迎下次使用！";
                 exit(0);
             default:

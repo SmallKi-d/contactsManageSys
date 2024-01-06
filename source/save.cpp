@@ -18,34 +18,48 @@
 using namespace std;
 
 void Save::SaveToFile(const std::string &filename) {
+
+    // 默认模式清空文件内容
     ofstream outFile(filename);
 
-    //格式化
-    outFile << "\t" << l_.l_Arr[l_.l_size].c_name << "\t" <<  l_.l_Arr[l_.l_size].c_sex << "\t" << l_.l_Arr[l_.l_size].c_age
-        << "\t" << l_.l_Arr[l_.l_size].c_phoneNumber << "\t" << l_.l_Arr[l_.l_size].c_homeAddress << endl;
+    // 从内存中写入通讯录
+    for(int index = 0;index != l_.l_size; index++){
+        //格式化
+        outFile << l_.l_Arr[index].c_name << "\t"
+            <<  l_.l_Arr[index].c_sex << "\t"
+            << l_.l_Arr[index].c_age<< "\t"
+            << l_.l_Arr[index].c_phoneNumber << "\t"
+            << l_.l_Arr[index].c_homeAddress << endl;
+    }
 
     outFile.close();
 }
 
-void Save::LoadFromFile(const std::string &filename, list *addressList) {
+void Save::LoadFromFile(const std::string &filename) {
+    int index = 0;
     ifstream inFile(filename);
     string line;
 
     // 判断是否能打开文件
     if (!inFile.is_open()) {
-        std::cerr << "无法打开文件" << std::endl;
+        std::cerr << "无法打开文件: " << filename << std::endl;
         return;
     }
 
     // 循环读文件的每一行
-    while (getline(inFile, line)) {
+    while (getline(inFile, line) && index < MAX) {
         std::istringstream iss(line);
-        // 拆分整行字符串
-        if (!(iss >> addressList -> l_Arr[addressList->l_size].c_name)) {
-            break;
-        }
-
+        contacts contact;
+        std::getline(iss, contact.c_name, '\t');
+        iss >> contact.c_sex;
+        iss.ignore(); // 忽略制表符
+        iss >> contact.c_age;
+        iss.ignore(); // 忽略制表符
+        std::getline(iss, contact.c_phoneNumber, '\t');
+        std::getline(iss, contact.c_homeAddress);
+        l_.l_Arr[index++] = contact;
     }
+    l_.l_size = index;
 
     inFile.close();
 }

@@ -7,27 +7,35 @@
 #include "../header/isPhone.h"
 #include "../header/do.h"
 #include "../header/save.h"
+#include "../header/clear.h"
 
 
 using namespace std;
 
 // 读取通讯录
-void loadContact(list *addressList){
+void readContact(list *addressList){
     Save* save = new Save(*addressList);
     save -> ifFileExist("contact.txt");
-    save -> LoadFromFile("contact.txt", addressList);
+    save -> LoadFromFile("contact.txt");
+    *addressList = save->getList();
+    delete save;
+}
+
+// 写入通讯录
+void writeContact(list *addressList){
+    Save* save = new Save(*addressList);
+    save -> ifFileExist("contact.txt");
+    save -> SaveToFile("contact.txt");
     delete save;
 }
 
 //1.添加联系人函数
-void addContacts(list *addressList){
+void addContact(list *addressList){
     //判断通讯录是否已满
     if (addressList->l_size == MAX){
         //返回通讯录已满提示并回到菜单
         cout << "通讯录已满！";
-        cout << "请按任意键继续。" << endl;
-        system("read");
-        system("clear");
+        clear();
         return;
     } else{
         //添加具体联系人
@@ -54,7 +62,7 @@ void addContacts(list *addressList){
                 cin.clear();
                 cin.ignore();
             }
-            cout << "输入有误，请重新输入！" << endl;
+            cerr << "输入有误，请重新输入！" << endl;
         }
 
         //年龄
@@ -67,7 +75,7 @@ void addContacts(list *addressList){
                 addressList ->l_Arr[addressList->l_size].c_age = age;
                 break;
             }
-            cout << "输入有误，请重新输入！" << endl;
+            cerr << "输入有误，请重新输入！" << endl;
         }
 
         //电话
@@ -80,7 +88,7 @@ void addContacts(list *addressList){
                 addressList ->l_Arr[addressList->l_size].c_phoneNumber = phoneNumber;
                 break;
             } else{
-                cout << "输入有误，请检查手机号码是否正确！" << endl;
+                cerr << "输入有误，请检查手机号码是否正确！" << endl;
             }
         }
 
@@ -91,17 +99,11 @@ void addContacts(list *addressList){
         whatDo(*addressList, homeAddress);
         addressList -> l_Arr[addressList -> l_size].c_homeAddress = homeAddress;
 
-        //写入文件
-        Save* save = new Save(*addressList);
-        save->SaveToFile("contact.txt");
-        delete save;
-
         //更新通讯录人数
         addressList -> l_size++;
 
-        cout << "添加成功！请按任意键继续。" << endl;
-        system("read");
-        system("clear");
+        cout << "添加成功！" << endl;
+        clear();
     }
 }
 
@@ -110,9 +112,7 @@ void showContacts(list *addressList){
     //判断通讯录中人数是否为0，若为0提示为空
     if (addressList -> l_size == 0){
         cout << "当前的记录为空，请返回主页添加联系人" << endl;
-        cout << "请按任意键继续。" << endl;
-        system("read");
-        system("clear");
+        clear();
     } else{
         for (int i = 0; i < addressList -> l_size; ++i) {
             cout << "姓名：" << addressList -> l_Arr[i].c_name << "\t";
@@ -121,9 +121,7 @@ void showContacts(list *addressList){
             cout << "手机号码：" << addressList -> l_Arr[i].c_phoneNumber << "\t";
             cout << "地址：" << addressList -> l_Arr[i].c_homeAddress << endl;
         }
-        cout << "请按任意键继续。" << endl;
-        system("read");
-        system("clear");
+        clear();
     }
 }
 
@@ -161,11 +159,9 @@ void deleteContact(list *addressList){
 
         cout << "删除成功！" << endl;
     } else{
-        cout << "未找到该联系人，请检查您的输入！" << endl;
+        cerr << "未找到该联系人，请检查您的输入！" << endl;
     }
-    cout << "请按任意键继续。" << endl;
-    system("read");
-    system("clear");
+    clear();
 }
 
 //4.查找联系人函数
@@ -185,18 +181,15 @@ void findContact(list *addressList){
         cout << "电话号码：" << addressList->l_Arr[ret].c_phoneNumber << "\t";
         cout << "家庭住址：" << addressList->l_Arr[ret].c_homeAddress << endl;
     } else{
-        cout << "查无此人";
+        cerr << "查无此人";
     }
-    cout << "请按任意键继续。";
-    system("read");
-    system("clear");
+    clear();
 }
 
 //5.修改联系人函数
 void modifyContact(list *addressList){
     while (true){
         cout << "请输入您要修改的联系人姓名:" << endl;
-        cout << ":b.回到主菜单（:为英文字符）" << endl;
         string name;
         cin >> name;
         whatDo(*addressList,name);
@@ -237,7 +230,7 @@ void modifyContact(list *addressList){
                             addressList ->l_Arr[ret].c_age = age;
                             break;
                         }
-                        cout << "输入有误，请重新输入！" << endl;
+                        cerr << "输入有误，请重新输入！" << endl;
                     }
                     break;
                 }
@@ -257,7 +250,7 @@ void modifyContact(list *addressList){
                             cin.clear();
                             cin.ignore();
                         }
-                        cout << "输入有误，请重新输入！" << endl;
+                        cerr << "输入有误，请重新输入！" << endl;
                     }
                     break;
                 }
@@ -272,7 +265,7 @@ void modifyContact(list *addressList){
                             addressList ->l_Arr[ret].c_phoneNumber = phoneNumber;
                             break;
                         } else{
-                            cout << "输入有误，请检查手机号码是否正确！" << endl;
+                            cerr << "输入有误，请检查手机号码是否正确！" << endl;
                         }
                     }
                     break;
@@ -292,15 +285,14 @@ void modifyContact(list *addressList){
                 }
                 default:
                 {
-                    cout << "非法请求！" << endl;
+                    cerr << "非法请求！" << endl;
                     continue;
                 }
             }
             break;
         }else{
-            cout << "查无此人，请按任意键继续" << endl;
-            system("read");
-            system("clear");
+            cerr << "查无此人" << endl;
+            clear();
         }
     }
 
@@ -312,6 +304,5 @@ void modifyContact(list *addressList){
 //6.清空通讯录函数
 void cleanList(list *addressList){
     addressList->l_size = 0;
-    system("read");
-    system("clean");
+    clear();
 }

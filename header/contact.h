@@ -13,16 +13,19 @@
 using namespace std;
 
 // 读取通讯录
-void loadContact(list *addressList);
+void readContact(list *addressList);
+
+// 写入通讯录
+void writeContact(list *addressList);
 
 //1.添加联系人函数
-void addContacts(list *addressList);
+void addContact(list *addressList);
 
 //2.显示联系人函数
 void showContacts(list *addressList);
 
 //通过姓名检测联系人是否存在,若存在，返回位置，不存在返回0
-int ifExist (list *addressList,const std::string& name);
+int ifExist(list *addressList, const std::string &name);
 
 //3.删除联系人函数
 void deleteContact(list *addressList);

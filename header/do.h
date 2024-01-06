@@ -7,4 +7,4 @@
 
 #endif //UNTITLED1_DO_H
 
-void whatDo(list addressList,const string& uDo);
+string whatDo(list addressList, const string& uDo);

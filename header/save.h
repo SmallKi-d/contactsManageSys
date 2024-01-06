@@ -13,17 +13,26 @@
 using namespace std;
 
 // 用户数据文件操作
-class Save{
+class Save {
 public:
+
     // 防止隐式转换
-    explicit Save(const list& l): l_(l){}
+    explicit Save(const list &l) : l_(l) {}
 
     // 保存到文件
-    void SaveToFile(const string& filename);
+    void SaveToFile(const string &filename);
+
     // 从文件读取
-    void LoadFromFile(const string& filename, list *addressList);
+    void LoadFromFile(const string &filename);
+
     // 生成文件
-    void ifFileExist(const string& filename);
+    void ifFileExist(const string &filename);
+
+    // 返回文件
+    list getList() const {
+        return l_;
+    }
+
 private:
     list l_;
 };
