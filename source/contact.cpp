@@ -12,123 +12,135 @@
 
 using namespace std;
 
+bool ContactLogic(list *addressList, int ret, const string &name, int sex, int age, const string &phoneNumber,
+                  const string &homeAddress) {
+    //判断通讯录是否已满
+    if (addressList->l_size == MAX) {
+        //返回通讯录已满提示并回到菜单
+        cout << "通讯录已满！";
+        return false;
+    } else {
+        //添加具体联系人
+        addressList->l_Arr[ret].c_name = name;
+        addressList->l_Arr[ret].c_sex = sex;
+        addressList->l_Arr[ret].c_age = age;
+        addressList->l_Arr[ret].c_phoneNumber = phoneNumber;
+        addressList->l_Arr[ret].c_homeAddress = homeAddress;
+        if (ret == addressList->l_size) {
+            addressList->l_size++;
+        }
+        return true;
+    }
+}
+
 // 读取通讯录
-void readContact(list *addressList){
-    Save* save = new Save(*addressList);
-    save -> ifFileExist("contact.txt");
-    save -> LoadFromFile("contact.txt");
+void readContact(list *addressList) {
+    Save *save = new Save(*addressList);
+    save->ifFileExist("contact.txt");
+    save->LoadFromFile("contact.txt");
     *addressList = save->getList();
     delete save;
 }
 
 // 写入通讯录
-void writeContact(list *addressList){
-    Save* save = new Save(*addressList);
-    save -> ifFileExist("contact.txt");
-    save -> SaveToFile("contact.txt");
+void writeContact(list *addressList) {
+    Save *save = new Save(*addressList);
+    save->ifFileExist("contact.txt");
+    save->SaveToFile("contact.txt");
     delete save;
 }
 
-//1.添加联系人函数
-void addContact(list *addressList){
-    //判断通讯录是否已满
-    if (addressList->l_size == MAX){
-        //返回通讯录已满提示并回到菜单
-        cout << "通讯录已满！";
-        clear();
-        return;
-    } else{
-        //添加具体联系人
+// 1.添加联系人函数
+void addContact(list *addressList) {
+    // 添加具体联系人
+    // 姓名
+    string name;
+    cout << "请输入姓名: ";
+    cin >> name;
+    whatDo(*addressList, name);
 
-        //姓名
-        string name;
-        cout << "请输入姓名: ";
-        cin >> name;
-        whatDo(*addressList,name);
-        addressList -> l_Arr[addressList->l_size].c_name = name;
-
-        //性别
-        cout << "请输入性别：" << endl;
-        cout << "1 --- 男" << endl;
-        cout << "2 --- 女" << endl;
-        int sex = 0;
-        while (true){           //输入正确跳出循环
-            cin >> sex;
-            whatDo(*addressList, to_string(sex));
-            if (sex == 1 || sex == 2){
-                addressList -> l_Arr[addressList->l_size].c_sex = sex;
-                break;
-            } else {
-                cin.clear();
-                cin.ignore();
-            }
-            cerr << "输入有误，请重新输入！" << endl;
+    // 性别
+    cout << "请输入性别：" << endl;
+    cout << "1 --- 男" << endl;
+    cout << "2 --- 女" << endl;
+    int sex = 0;
+    while (true) {           //输入正确跳出循环
+        cin >> sex;
+        whatDo(*addressList, to_string(sex));
+        if (sex == 1 || sex == 2) {
+            break;
+        } else {
+            cin.clear();
+            cin.ignore();
         }
-
-        //年龄
-        cout << "请输入年龄：";
-        int age = -1;
-        while (true){
-            cin >> age;
-            whatDo(*addressList, to_string(age));
-            if (age > 0 && age < 100){
-                addressList ->l_Arr[addressList->l_size].c_age = age;
-                break;
-            }
-            cerr << "输入有误，请重新输入！" << endl;
-        }
-
-        //电话
-        cout << "请输入11位联系电话(+86)：";
-        string phoneNumber;
-        while (true){
-            cin >> phoneNumber;
-            whatDo(*addressList, phoneNumber);
-            if (isPhoneNum(phoneNumber)){
-                addressList ->l_Arr[addressList->l_size].c_phoneNumber = phoneNumber;
-                break;
-            } else{
-                cerr << "输入有误，请检查手机号码是否正确！" << endl;
-            }
-        }
-
-        //住址
-        cout << "请输入家庭住址： " << endl;
-        string homeAddress;
-        cin >> homeAddress;
-        whatDo(*addressList, homeAddress);
-        addressList -> l_Arr[addressList -> l_size].c_homeAddress = homeAddress;
-
-        //更新通讯录人数
-        addressList -> l_size++;
-
-        cout << "添加成功！" << endl;
-        clear();
+        cerr << "输入有误，请重新输入！" << endl;
     }
+
+    // 年龄
+    cout << "请输入年龄：";
+    int age = -1;
+    while (true) {
+        cin >> age;
+        whatDo(*addressList, to_string(age));
+        if (age > 0 && age < 100) {
+            break;
+        }
+        cerr << "输入有误，请重新输入！" << endl;
+    }
+
+    // 电话
+    cout << "请输入11位联系电话(+86)：";
+    string phoneNumber;
+    while (true) {
+        cin >> phoneNumber;
+        whatDo(*addressList, phoneNumber);
+        if (isPhoneNum(phoneNumber)) {
+            break;
+        } else {
+            cerr << "输入有误，请检查手机号码是否正确！" << endl;
+        }
+    }
+
+    // 住址
+    cout << "请输入家庭住址： " << endl;
+    string homeAddress;
+    cin >> homeAddress;
+    whatDo(*addressList, homeAddress);
+
+    // 执行添加逻辑
+    bool b = ContactLogic(addressList, addressList->l_size, name, sex, age, phoneNumber, homeAddress);
+
+    if (b)
+        cout << "添加成功！" << endl;
+    else
+        cerr << "添加失败！" << endl;
+
+    clear();
 }
 
+
 //2.显示联系人函数
-void showContacts(list *addressList){
+void showContacts(list *addressList) {
     //判断通讯录中人数是否为0，若为0提示为空
-    if (addressList -> l_size == 0){
+    if (addressList->l_size == 0) {
         cout << "当前的记录为空，请返回主页添加联系人" << endl;
         clear();
-    } else{
-        for (int i = 0; i < addressList -> l_size; ++i) {
-            cout << "姓名：" << addressList -> l_Arr[i].c_name << "\t";
-            cout << "年龄：" << addressList -> l_Arr[i].c_age << "\t";
-            cout << "姓别：" << (addressList -> l_Arr[i].c_sex == 1 ? "男":"女") << "\t";
-            cout << "手机号码：" << addressList -> l_Arr[i].c_phoneNumber << "\t";
-            cout << "地址：" << addressList -> l_Arr[i].c_homeAddress << endl;
+    } else {
+        for (int i = 0; i < addressList->l_size; ++i) {
+            cout << "姓名：" << addressList->l_Arr[i].c_name << "\t";
+            cout << "年龄：" << addressList->l_Arr[i].c_age << "\t";
+            cout << "姓别：" << (addressList->l_Arr[i].c_sex == 1 ? "男" : "女") << "\t";
+            cout << "手机号码：" << addressList->l_Arr[i].c_phoneNumber << "\t";
+            cout << "地址：" << addressList->l_Arr[i].c_homeAddress << endl;
         }
         clear();
     }
 }
 
 //通过姓名检测联系人是否存在,若存在，返回位置，不存在返回-1
-int ifExist (list *addressList,const string& name){
+int ifExist(list *addressList, const string &name) {
     for (int i = 0; i < addressList->l_size; i++) {
-        if (addressList->l_Arr[i].c_name == name){
+        if (addressList->l_Arr[i].c_name == name) {
             return i;
         }
     }
@@ -136,72 +148,72 @@ int ifExist (list *addressList,const string& name){
 }
 
 //3.删除联系人函数
-void deleteContact(list *addressList){
+void deleteContact(list *addressList) {
     cout << "请输入您要删除的联系人姓名" << endl;
 
     //请求用户输入联系人姓名
     string name;
     cin >> name;
-    whatDo(*addressList,name);
+    whatDo(*addressList, name);
 
     //使用 ifExist 判断联系人是否存在
-    int ret = ifExist(addressList,name);
-    if (ret != -1){
+    int ret = ifExist(addressList, name);
+    if (ret != -1) {
 
         //查到此人，并进行删除
-        for (int i = ret; i < addressList -> l_size; ++i) {
+        for (int i = ret; i < addressList->l_size; ++i) {
             //数据前移
-            addressList -> l_Arr[i] = addressList -> l_Arr[ i + 1];
+            addressList->l_Arr[i] = addressList->l_Arr[i + 1];
         }
 
         //更新通讯录中人数
-        addressList ->l_size--;
+        addressList->l_size--;
 
         cout << "删除成功！" << endl;
-    } else{
+    } else {
         cerr << "未找到该联系人，请检查您的输入！" << endl;
     }
     clear();
 }
 
 //4.查找联系人函数
-void findContact(list *addressList){
+void findContact(list *addressList) {
     cout << "请输入您要查找的联系人姓名：";
     string name;
     cin >> name;
-    whatDo(*addressList,name);
+    whatDo(*addressList, name);
 
     //判断是否存在
-    int ret = ifExist(addressList,name);
+    int ret = ifExist(addressList, name);
 
-    if (ret != -1){
+    if (ret != -1) {
         cout << "姓名：" << addressList->l_Arr[ret].c_name << "\t";
         cout << "年龄：" << addressList->l_Arr[ret].c_sex << "\t";
-        cout << "姓别：" << (addressList -> l_Arr[ret].c_sex == 1 ? "男":"女")  << "\t";
+        cout << "姓别：" << (addressList->l_Arr[ret].c_sex == 1 ? "男" : "女") << "\t";
         cout << "电话号码：" << addressList->l_Arr[ret].c_phoneNumber << "\t";
         cout << "家庭住址：" << addressList->l_Arr[ret].c_homeAddress << endl;
-    } else{
+    } else {
         cerr << "查无此人";
     }
     clear();
 }
 
 //5.修改联系人函数
-void modifyContact(list *addressList){
-    while (true){
+void modifyContact(list *addressList) {
+    while (true) {
         cout << "请输入您要修改的联系人姓名:" << endl;
         string name;
         cin >> name;
-        whatDo(*addressList,name);
+        whatDo(*addressList, name);
 
         //判断是否存在
-        int ret = ifExist(addressList,name);
+        int ret = ifExist(addressList, name);
 
         //若存在，请求用户修改对应信息
-        if(ret != -1){
+        if (ret != -1) {
             cout << "1.姓名：" << addressList->l_Arr[ret].c_name << endl;
-            cout << "2.年龄：" << addressList->l_Arr[ret].c_sex << endl;
-            cout << "3.姓别：" << (addressList -> l_Arr[ret].c_sex == 1 ? "男":"女")  << endl;
+            cout << "2.年龄：" << addressList->l_Arr[ret].c_age << endl;
+            cout << "3.姓别：" << (addressList->l_Arr[ret].c_sex == 1 ? "男" : "女") << endl;
             cout << "4.电话号码：" << addressList->l_Arr[ret].c_phoneNumber << endl;
             cout << "5.家庭住址：" << addressList->l_Arr[ret].c_homeAddress << endl;
             cout << "0.退出" << endl;
@@ -215,19 +227,32 @@ void modifyContact(list *addressList){
                     string fixedName;
                     cout << "请输入姓名：";
                     cin >> fixedName;
-                    whatDo(*addressList,fixedName);
-                    addressList->l_Arr[ret].c_name = fixedName;
+                    whatDo(*addressList, fixedName);
+                    if (ContactLogic(addressList, ret, fixedName, addressList->l_Arr[ret].c_sex,
+                                     addressList->l_Arr[ret].c_age, addressList->l_Arr[ret].c_phoneNumber,
+                                     addressList->l_Arr[ret].c_homeAddress)) {
+                        cout << "修改成功!" << endl;
+                    } else {
+                        cerr << "修改失败!" << endl;
+                    }
                     break;
                 }
                 case 2:     //年龄
                 {
                     cout << "请输入年龄：";
                     int age = -1;
-                    while (true){
+                    while (true) {
                         cin >> age;
                         whatDo(*addressList, to_string(age));
-                        if (age > 0 && age < 100){
-                            addressList ->l_Arr[ret].c_age = age;
+                        if (age > 0 && age < 100) {
+                            if (ContactLogic(addressList, ret, addressList->l_Arr[ret].c_name,
+                                             addressList->l_Arr[ret].c_sex,
+                                             age, addressList->l_Arr[ret].c_phoneNumber,
+                                             addressList->l_Arr[ret].c_homeAddress)) {
+                                cout << "修改成功!" << endl;
+                            } else {
+                                cerr << "修改失败!" << endl;
+                            }
                             break;
                         }
                         cerr << "输入有误，请重新输入！" << endl;
@@ -240,11 +265,17 @@ void modifyContact(list *addressList){
                     cout << "请输入性别代号：";
                     cout << "1 --- 男" << endl;
                     cout << "2 --- 女" << endl;
-                    while (true){           //输入正确跳出循环
+                    while (true) {           //输入正确跳出循环
                         cin >> sex;
                         whatDo(*addressList, to_string(sex));
-                        if (sex == 1 || sex == 2){
-                            addressList -> l_Arr[ret].c_sex = sex;
+                        if (sex == 1 || sex == 2) {
+                            if (ContactLogic(addressList, ret, addressList->l_Arr[ret].c_name, sex,
+                                             addressList->l_Arr[ret].c_age, addressList->l_Arr[ret].c_phoneNumber,
+                                             addressList->l_Arr[ret].c_homeAddress)) {
+                                cout << "修改成功!" << endl;
+                            } else {
+                                cerr << "修改失败!" << endl;
+                            }
                             break;
                         } else {
                             cin.clear();
@@ -258,13 +289,20 @@ void modifyContact(list *addressList){
                 {
                     cout << "请输入11位联系电话(+86)：";
                     string phoneNumber;
-                    while (true){
+                    while (true) {
                         cin >> phoneNumber;
                         whatDo(*addressList, phoneNumber);
-                        if (isPhoneNum(phoneNumber)){
-                            addressList ->l_Arr[ret].c_phoneNumber = phoneNumber;
+                        if (isPhoneNum(phoneNumber)) {
+                            if (ContactLogic(addressList, ret, addressList->l_Arr[ret].c_name,
+                                             addressList->l_Arr[ret].c_sex,
+                                             addressList->l_Arr[ret].c_age, phoneNumber,
+                                             addressList->l_Arr[ret].c_homeAddress)) {
+                                cout << "修改成功!" << endl;
+                            } else {
+                                cerr << "修改失败!" << endl;
+                            }
                             break;
-                        } else{
+                        } else {
                             cerr << "输入有误，请检查手机号码是否正确！" << endl;
                         }
                     }
@@ -276,21 +314,25 @@ void modifyContact(list *addressList){
                     string homeAddress;
                     cin >> homeAddress;
                     whatDo(*addressList, homeAddress);
-                    addressList -> l_Arr[ret].c_homeAddress = homeAddress;
+                    if (ContactLogic(addressList, ret, addressList->l_Arr[ret].c_name, addressList->l_Arr[ret].c_sex,
+                                     addressList->l_Arr[ret].c_age, addressList->l_Arr[ret].c_phoneNumber,
+                                     homeAddress)) {
+                        cout << "修改成功!" << endl;
+                    } else {
+                        cerr << "修改失败!" << endl;
+                    }
                     break;
                 }
-                case 0:
-                {
+                case 0: {
                     break;
                 }
-                default:
-                {
+                default: {
                     cerr << "非法请求！" << endl;
                     continue;
                 }
             }
             break;
-        }else{
+        } else {
             cerr << "查无此人" << endl;
             clear();
         }
@@ -302,7 +344,16 @@ void modifyContact(list *addressList){
 }
 
 //6.清空通讯录函数
-void cleanList(list *addressList){
-    addressList->l_size = 0;
-    clear();
+bool cleanList(list *addressList) {
+    for (int i = 0; i < addressList->l_size; ++i) {
+        addressList->l_Arr[i].c_name.clear();
+        addressList->l_Arr[i].c_sex = 0;
+        addressList->l_Arr[i].c_age = 0;
+        addressList->l_Arr[i].c_phoneNumber.clear();
+        addressList->l_Arr[i].c_homeAddress.clear();
+    }
+    addressList->l_size = 0; // 将通讯录大小设置为0
+
+    return true;
 }
+

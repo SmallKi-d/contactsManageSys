@@ -12,29 +12,33 @@
 
 using namespace std;
 
+// 添加联系人逻辑函数
+bool ContactLogic(list *addressList,int ret,const string& name, int sex, int age, const string& phoneNumber, const string& homeAddress);
+
 // 读取通讯录
 void readContact(list *addressList);
 
 // 写入通讯录
 void writeContact(list *addressList);
 
-//1.添加联系人函数
+// 1.添加联系人函数
 void addContact(list *addressList);
 
-//2.显示联系人函数
+// 2.显示联系人函数
 void showContacts(list *addressList);
 
-//通过姓名检测联系人是否存在,若存在，返回位置，不存在返回0
+// 通过姓名检测联系人是否存在,若存在，返回位置，不存在返回0
 int ifExist(list *addressList, const std::string &name);
 
-//3.删除联系人函数
+// 3.删除联系人函数
 void deleteContact(list *addressList);
 
-//4.查找联系人函数
+// 4.查找联系人函数
 void findContact(list *addressList);
 
-//5.修改联系人函数
+// 5.修改联系人函数
 void modifyContact(list *addressList);
 
-//6.清空通讯录函数
-void cleanList(list *addressList);
+// 6.清空通讯录函数
+bool cleanList(list *addressList);
+
