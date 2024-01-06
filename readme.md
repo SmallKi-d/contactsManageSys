@@ -4,7 +4,7 @@
 - cmake version 3.27.8 (CMake; JetBrains IDE bundle; build 16)  
 
 
-- 注：该终端软件用于本人C++期末作业，不保证后续维护
+- 注：该终端软件用于本人C++期末作业，为各位大学生提供个参考，不保证后续维护
 - 如果有任何建议欢迎大佬提交 issue 或 PR
 
 ### 需求：
