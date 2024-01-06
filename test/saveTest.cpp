@@ -84,7 +84,7 @@ TEST_F(SaveTest, LoadFromFile) {
 // 测试 ifFileExist 函数
 TEST_F(SaveTest, IfFileExist) {
     // 确保文件不存在
-    std::filesystem::remove(tempFilename);
+    filesystem::remove(tempFilename);
 
     // 检查文件是否存在
     saveObj->ifFileExist(tempFilename);
